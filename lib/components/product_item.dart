@@ -12,7 +12,7 @@ class ProductItem extends StatelessWidget {
     return GridTile(
       footer: GridTileBar(
         backgroundColor: Colors.black87,
-        title: Text(product.title),
+        title: Text(product.name),
         leading: Consumer<Product>(builder: (ctx, product, _) {
           return IconButton(
             onPressed: () => product.toggleFavorite(),
