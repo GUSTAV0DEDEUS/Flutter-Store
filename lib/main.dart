@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.PRODUCT_DETAIL: (ctx) => const CounterPage(),
         },
         debugShowCheckedModeBanner: false,
-        home: ProductsOverview(),
+        home: const ProductsOverviewPage(),
       ),
     );
   }
