@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:store/model/cart.dart';
+import 'package:store/model/order_list.dart';
 import 'package:store/model/product_list.dart';
-import 'package:store/pages/counter_page.dart';
+import 'package:store/pages/cart_page.dart';
+import 'package:store/pages/orders_page.dart';
 import 'package:store/pages/product_detail_page.dart';
+import 'package:store/pages/product_form.dart';
+import 'package:store/pages/products_page.dart';
 import 'package:store/pages/products_overview_page.dart';
-import 'package:store/providers/counter.dart';
 import 'package:store/utils/app_routes.dart';
 
 void main() {
@@ -25,6 +28,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => OrderList(),
+        ),
       ],
       child: MaterialApp(
         title: 'Store demo',
@@ -34,10 +40,15 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
         ),
         routes: {
-          AppRoutes.PRODUCT_DETAIL: (ctx) => const CounterPage(),
+          AppRoutes.PRODUCT_DETAIL: (ctx) => const ProductDetailPage(),
+          AppRoutes.CART: (ctx) => const CartPage(),
+          AppRoutes.HOME: (ctx) => const ProductsOverviewPage(),
+          AppRoutes.ORDERS: (ctx) => const OrdersPage(),
+          AppRoutes.PRODUCTS: (ctx) => const ProductsPage(),
+          AppRoutes.PRODUCT_FORM: (ctx) => const ProductFormPage(),
         },
         debugShowCheckedModeBanner: false,
-        home: const ProductsOverviewPage(),
+        // home: const ProductsOverviewPage(),
       ),
     );
   }
