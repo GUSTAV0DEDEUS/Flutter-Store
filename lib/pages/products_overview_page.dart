@@ -4,6 +4,7 @@ import 'package:store/components/app_drawer.dart';
 import 'package:store/components/badge.dart';
 import 'package:store/components/product_grid.dart';
 import 'package:store/model/cart.dart';
+import 'package:store/model/product_list.dart';
 import 'package:store/utils/app_routes.dart';
 
 enum FilterOptions {
@@ -20,6 +21,14 @@ class ProductsOverviewPage extends StatefulWidget {
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _showFavoriteOnly = false;
+  bool _isLoanding = true;
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(context, listen: false).loadProducts().then(
+          (value) => {setState(() => _isLoanding = false)},
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +72,9 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           )
         ],
       ),
-      body: ProductGrid(_showFavoriteOnly),
+      body: _isLoanding
+          ? const Center(child: CircularProgressIndicator())
+          : ProductGrid(_showFavoriteOnly),
       drawer: const AppDrawer(),
     );
   }
