@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:store/exception/http_exception.dart';
 import 'package:store/model/product.dart';
-import 'package:store/utils/constants.dart';
+import 'package:store/share/config.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl = Constants.productBaseUrl;
+  final _baseUrl = Config.productBaseUrl;
   final List<Product> _items = [];
 
   // List<Product> get items => [..._items];

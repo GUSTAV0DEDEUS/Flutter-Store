@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:store/model/cart.dart';
 import 'package:store/model/order.dart';
-import 'package:store/utils/constants.dart';
 import 'package:store/model/card_item.dart' as model;
+import 'package:store/share/config.dart';
 
 class OrderList with ChangeNotifier {
   final List<Order> _items = [];
@@ -22,7 +22,7 @@ class OrderList with ChangeNotifier {
     _items.clear();
 
     final response = await http.get(
-      Uri.parse('${Constants.orderBaseUrl}.json'),
+      Uri.parse('${Config.orderBaseUrl}.json'),
     );
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -52,7 +52,7 @@ class OrderList with ChangeNotifier {
   Future<void> addOrder(Cart cart) async {
     final date = DateTime.now();
     final response = await http.post(
-      Uri.parse('${Constants.orderBaseUrl}.json'),
+      Uri.parse('${Config.orderBaseUrl}.json'),
       body: jsonEncode(
         {
           'total': cart.totalAmount,

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:store/utils/constants.dart';
+import 'package:store/share/config.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -10,7 +10,7 @@ class Product with ChangeNotifier {
   final double price;
   final String imageUrl;
   bool isFavorite;
-  final _baseUrl = Constants.productBaseUrl;
+  final _baseUrl = Config.productBaseUrl;
 
   Product({
     required this.id,
