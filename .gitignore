@@ -49,3 +49,7 @@ app.*.map.json
 /linux/
 /macos/
 /ios/
+
+
+#env
+*.env
