@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:store/exception/http_exception.dart';
 import 'package:store/model/product.dart';
 import 'package:store/utils/constants.dart';
 
@@ -9,7 +10,7 @@ class ProductList with ChangeNotifier {
   final _baseUrl = Constants.productBaseUrl;
   final List<Product> _items = [];
 
-  List<Product> get items => [..._items];
+  // List<Product> get items => [..._items];
   List<Product> get favoriteItems =>
       _items.where((prod) => prod.isFavorite).toList();
 
@@ -104,31 +105,44 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  void removeProduct(Product product) {
+  Future<void> removeProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      _items.removeWhere((p) => p.id == product.id);
+      final product = _items[index];
+      _items.remove(product);
       notifyListeners();
+
+      final response =
+          await http.delete(Uri.parse('$_baseUrl/${product.id}.json'));
+
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw HttpException(
+          msg: 'Nao foi possivel excluir o produto',
+          statudCode: response.statusCode,
+        );
+      }
     }
   }
+
+  bool _showFavoriteOnly = false;
+
+  List<Product> get items {
+    if (_showFavoriteOnly) {
+      return _items.where((prod) => prod.isFavorite).toList();
+    }
+    return [..._items];
+  }
+
+  void showFavoriteOnly() {
+    _showFavoriteOnly = true;
+    notifyListeners();
+  }
+
+  void showAll() {
+    _showFavoriteOnly = false;
+    notifyListeners();
+  }
 }
-
-// bool _showFavoriteOnly = false;
-
-//   List<Product> get items {
-//     if (_showFavoriteOnly) {
-//       return _items.where((prod) => prod.isFavorite).toList();
-//     }
-//     return [..._items];
-//   }
-
-//   void showFavoriteOnly() {
-//     _showFavoriteOnly = true;
-//     notifyListeners();
-//   }
-
-//   void showAll() {
-//     _showFavoriteOnly = false;
-//     notifyListeners();
-//   }
