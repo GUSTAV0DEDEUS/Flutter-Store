@@ -21,13 +21,19 @@ class ProductsOverviewPage extends StatefulWidget {
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _showFavoriteOnly = false;
-  bool _isLoanding = true;
+  bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(context, listen: false).loadProducts().then(
-          (value) => {setState(() => _isLoanding = false)},
-        );
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -69,10 +75,10 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
               value: cart.itemsCount.toString(),
               child: child!,
             ),
-          )
+          ),
         ],
       ),
-      body: _isLoanding
+      body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ProductGrid(_showFavoriteOnly),
       drawer: const AppDrawer(),
