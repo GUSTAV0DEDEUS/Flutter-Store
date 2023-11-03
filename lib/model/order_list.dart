@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:store/model/card_item.dart';
 import 'package:store/model/cart.dart';
 import 'package:store/model/order.dart';
-import 'package:store/model/card_item.dart' as model;
 import 'package:store/share/config.dart';
 
 class OrderList with ChangeNotifier {
@@ -27,7 +27,7 @@ class OrderList with ChangeNotifier {
   }
 
   Future<void> loadOrders() async {
-    List<Order> tempItems = [];
+    List<Order> items = [];
 
     final response = await http.get(
       Uri.parse('${Config.orderBaseUrl}/$_userId.json?auth=$_token'),
@@ -35,33 +35,33 @@ class OrderList with ChangeNotifier {
     if (response.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((orderId, orderData) {
-      tempItems.add(
+      items.add(
         Order(
           id: orderId,
           date: DateTime.parse(orderData['date']),
           total: orderData['total'],
-          products: (orderData['products'] as List<dynamic>)
-              .map(
-                (item) => model.CardItem(
-                  id: item['id'],
-                  productId: item['productId'],
-                  name: item['name'],
-                  quantity: item['quantity'],
-                  price: item['price'],
-                ),
-              )
-              .toList(),
+          products: (orderData['products'] as List<dynamic>).map((item) {
+            return CardItem(
+              id: item['id'],
+              productId: item['productId'],
+              name: item['name'],
+              quantity: item['quantity'],
+              price: item['price'],
+            );
+          }).toList(),
         ),
       );
     });
-    _items = tempItems.reversed.toList();
+
+    _items = items.reversed.toList();
     notifyListeners();
   }
 
   Future<void> addOrder(Cart cart) async {
     final date = DateTime.now();
+
     final response = await http.post(
-      Uri.parse('${Config.orderBaseUrl}.json?auth=$_token'),
+      Uri.parse('${Config.orderBaseUrl}/$_userId.json?auth=$_token'),
       body: jsonEncode(
         {
           'total': cart.totalAmount,
