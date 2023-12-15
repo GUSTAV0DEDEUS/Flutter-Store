@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:store/model/auth.dart';
+import 'package:store/pages/orders_page.dart';
 import 'package:store/utils/app_routes.dart';
+import 'package:store/utils/custom_route.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -27,8 +29,10 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.shop),
             title: const Text("Pedidos"),
-            onTap: () => Navigator.of(context).pushReplacementNamed(
-              AppRoutes.ORDERS,
+            onTap: () => Navigator.of(context).pushReplacement(
+              CustomRoute(
+                builder: (ctx) => OrdersPage(),
+              ),
             ),
           ),
           const Divider(),

@@ -1,6 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:store/firebase_options.dart';
 import 'package:store/model/auth.dart';
 import 'package:store/model/cart.dart';
 import 'package:store/model/order_list.dart';
@@ -12,8 +14,14 @@ import 'package:store/pages/product_detail_page.dart';
 import 'package:store/pages/product_form.dart';
 import 'package:store/pages/products_page.dart';
 import 'package:store/utils/app_routes.dart';
+import 'package:store/utils/custom_route.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
@@ -55,8 +63,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Store demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          primarySwatch: Colors.deepPurple,
           useMaterial3: true,
+          pageTransitionsTheme: PageTransitionsTheme(builders: {
+            TargetPlatform.iOS: CustomPageTransitionsBuilder(),
+            TargetPlatform.android: CustomPageTransitionsBuilder(),
+            TargetPlatform.windows: CustomPageTransitionsBuilder(),
+          }),
           fontFamily: 'Lato',
         ),
         routes: {
